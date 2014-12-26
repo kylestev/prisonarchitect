@@ -14,17 +14,19 @@ class PrisonParser(object):
         with open(filename, 'r') as f:
             return tokenize(f.read())
 
-    def _parse_section(self, parent, tokens):
-        name_tokens, consumed = section_name(tokens[0:])
-
+    def _get_name_from_section(self, parent, tokens):
+        name_tokens, consumed = section_name(tokens)
         if name_tokens is None:
-            pprint(tokens[:10])
-            raise Exception('Name of a section under {0} unable to be parsed!'.format(parent.name))
+            raise Exception(('Name of a section under {0} unable '
+                             'to be parsed!').format(parent.name))
 
-        section = Section(' '.join(t.value for t in name_tokens))
+        return ' '.join(t.value for t in name_tokens), consumed
+
+    def _parse_section(self, parent, tokens):
+        name, idx = self._get_name_from_section(parent, tokens)
+        section = Section(name)
 
         noaction = True
-        idx = consumed
         while idx < len(tokens):
             piece = tokens[idx]
             if type(piece) is list:
