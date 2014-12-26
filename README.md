@@ -11,8 +11,9 @@ from pprint import pprint
 from prisonarchitect import PrisonParser
 
 parser = PrisonParser()
-section = parser.load('autosave.prison')
-pprint(section.attrs)
-pprint(section.sections.keys())
+base = parser.load('autosave.prison')
+print base.attrs['Intake.numPrisoners'], 'new prisoners for next intake!'
+base.attrs['CeoLetterRead'] = 'false'
+parser.save('autosave.prison')
 
 ```
