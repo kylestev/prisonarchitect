@@ -84,9 +84,6 @@ class PrisonParser(object):
                 self._section_indices[name] = {'start': idx,
                                                'end': idx + consumed + 1}
 
-                # section = self._parse_section(base_section, matched)
-                # base_section.add_section(section)
-
                 idx += consumed
 
     def get_section(self, name):
@@ -123,3 +120,12 @@ class PrisonParser(object):
         self._parse(self.tokens)
 
         return section
+
+    def save(self, filename):
+        for k, section in self._section_indices.items():
+            if k not in self._sections:
+                self.get_section(k)
+
+        with open(filename, 'w') as f:
+            for line in self.base_section.generate_save_file_lines(first=True):
+                f.write(line + '\n')
