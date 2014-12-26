@@ -8,7 +8,10 @@ from prisonarchitect.section import Section
 
 class PrisonParser(object):
     def __init__(self):
-        pass
+        self.section = None
+
+        self._sections = {}
+        self._section_indices = {}
 
     def _tokenize(self, filename):
         with open(filename, 'r') as f:
@@ -17,6 +20,7 @@ class PrisonParser(object):
     def _get_name_from_section(self, parent, tokens):
         name_tokens, consumed = section_name(tokens)
         if name_tokens is None:
+            print tokens[:5]
             raise Exception(('Name of a section under {0} unable '
                              'to be parsed!').format(parent.name))
 
@@ -51,13 +55,14 @@ class PrisonParser(object):
                     noaction = False
 
             if noaction:
+                print tokens[idx:idx+5]
                 raise Exception('Found a section unable to be parsed under {0} --> {1}'.format(parent.name, section.name))
 
             noaction = True
 
         return section
 
-    def _parse(self, base_section, tokens):
+    def _parse(self, tokens):
         idx = 0
         ntokens = len(tokens)
 
@@ -70,15 +75,35 @@ class PrisonParser(object):
             nxt = get_next()
 
             if tok.type in ['T_NAME', 'T_OBJ_PROP']:
-                base_section.add_attribute(tok.value, nxt.value)
+                self.base_section.add_attribute(tok.value, nxt.value)
                 idx += 2
             elif tok.type == 'SEC_START':
                 matched, consumed = section_contents(tokens[idx:])
+                name, _ = self._get_name_from_section(self.base_section, matched)
 
-                section = self._parse_section(base_section, matched)
-                base_section.add_section(section)
+                self._section_indices[name] = {'start': idx,
+                                               'end': idx + consumed + 1}
+
+                # section = self._parse_section(base_section, matched)
+                # base_section.add_section(section)
 
                 idx += consumed
+
+    def get_section(self, name):
+        if name not in self._section_indices:
+            raise IndexError('{0} is not a valid section'.format(name))
+
+        if name not in self._sections:
+            indices = self._section_indices[name]
+            subset = self.tokens[indices['start']:indices['end']]
+            breakdown, _ = section_contents(subset)
+
+            section = self._parse_section(self.base_section, breakdown)
+            self.base_section.add_section(section)
+
+            self._sections[name] = section
+
+        return self._sections[name]
 
     def load(self, filename, caching=False):
         if caching:
@@ -93,6 +118,8 @@ class PrisonParser(object):
                 f.write(json.dumps(self.tokens))
 
         section = Section('self')
-        self._parse(section, self.tokens)
+
+        self.base_section = section
+        self._parse(self.tokens)
 
         return section
