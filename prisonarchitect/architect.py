@@ -86,19 +86,22 @@ class PrisonParser(object):
 
                 idx += consumed
 
+    def _load_section(self, name):
+        indices = self._section_indices[name]
+        subset = self.tokens[indices['start']:indices['end']]
+        breakdown, _ = section_contents(subset)
+
+        section = self._parse_section(self.base_section, breakdown)
+        self.base_section.add_section(section)
+
+        self._sections[name] = section
+
     def get_section(self, name):
         if name not in self._section_indices:
             raise IndexError('{0} is not a valid section'.format(name))
 
         if name not in self._sections:
-            indices = self._section_indices[name]
-            subset = self.tokens[indices['start']:indices['end']]
-            breakdown, _ = section_contents(subset)
-
-            section = self._parse_section(self.base_section, breakdown)
-            self.base_section.add_section(section)
-
-            self._sections[name] = section
+            self._load_section(name)
 
         return self._sections[name]
 
@@ -124,7 +127,7 @@ class PrisonParser(object):
     def save(self, filename):
         for k, section in self._section_indices.items():
             if k not in self._sections:
-                self.get_section(k)
+                self._load_section(k)
 
         with open(filename, 'w') as f:
             for line in self.base_section.generate_save_file_lines(first=True):
