@@ -1,6 +1,7 @@
 from itertools import dropwhile
 import re
-from tokens import parse_order, Token
+
+from prisonarchitect.lexer.tokens import parse_order, Token
 
 
 def input_stream(src):

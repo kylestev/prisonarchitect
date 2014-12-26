@@ -1,4 +1,4 @@
-from tokens import Token
+from prisonarchitect.lexer.tokens import Token
 
 
 def matches_between(tokens, t_start, t_end):

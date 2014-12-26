@@ -1,25 +1,9 @@
 import json
 
-from parsers import read_quote, section_name, section_contents
-from tokenizer import tokenize
-from tokens import Token
-
-
-class Section(object):
-    def __init__(self, name):
-        self.name = name
-
-        self.attrs = {}
-        self.sections = {}
-
-    def add_attribute(self, name, value):
-        self.attrs[name] = value
-
-    def add_section(self, section):
-        self.sections[section.name] = section
-
-    def __repr__(self):
-        return '<Section>(name={0}, attrs={1}, sections={2})'.format(self.name, self.attrs, self.sections)
+from prisonarchitect.lexer.parsers import read_quote, section_name, section_contents
+from prisonarchitect.lexer.tokenizer import tokenize
+from prisonarchitect.lexer.tokens import Token
+from prisonarchitect.section import Section
 
 
 class PrisonParser(object):
