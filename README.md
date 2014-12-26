@@ -12,8 +12,8 @@ from prisonarchitect import PrisonParser
 
 parser = PrisonParser()
 base = parser.load('autosave.prison')
-print base.attrs['Intake.numPrisoners'], 'new prisoners for next intake!'
-base.attrs['CeoLetterRead'] = 'false'
+print base['Intake.numPrisoners'], 'new prisoners'
+base['CeoLetterRead'] = 'false'
 parser.save('autosave.prison')
 
 ```

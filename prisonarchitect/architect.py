@@ -49,7 +49,7 @@ class PrisonParser(object):
 
                     attr_name = ' '.join(t.value for t in q_tokens)
 
-                    section.add_attribute(attr_name, tokens[idx + q_consumed].value)
+                    section[attr_name] = tokens[idx + q_consumed].value
 
                     idx += q_consumed + 1
                     noaction = False
@@ -75,7 +75,7 @@ class PrisonParser(object):
             nxt = get_next()
 
             if tok.type in ['T_NAME', 'T_OBJ_PROP']:
-                self.base_section.add_attribute(tok.value, nxt.value)
+                self.base_section[tok.value] = nxt.value
                 idx += 2
             elif tok.type == 'SEC_START':
                 matched, consumed = section_contents(tokens[idx:])

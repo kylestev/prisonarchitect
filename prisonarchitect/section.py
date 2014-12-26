@@ -8,6 +8,24 @@ class Section(object):
         self.attrs = OrderedDict()
         self.sections = OrderedDict()
 
+    def __contains__(self, key):
+        return key in self.attrs
+
+    def __delitem__(self, key):
+        if key not in self:
+            raise IndexError('{} is not an attribute'.format(key))
+
+        del self.attrs[key]
+
+    def __getitem__(self, key):
+        if key not in self:
+            raise IndexError('{} is not an attribute'.format(key))
+
+        return self.attrs[key]
+
+    def __setitem__(self, key, value):
+        self.attrs[key] = value
+
     def add_attribute(self, name, value):
         self.attrs[name] = value
 
