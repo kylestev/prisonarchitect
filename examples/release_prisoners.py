@@ -1,10 +1,11 @@
-from prisonarchitect import PrisonParser
+from prisonarchitect import PrisonLoader
 
-parser = PrisonParser()
-parser.load('autosave.prison')
+with PrisonLoader('autosave.prison') as parser:
+    def prisoner_filter(section):
+        return section.attrs.get('Type', None) == 'Prisoner'
 
-for prisoner in parser.find(section='Objects', filter=lambda sec: sec.attrs.get('Type', None) == 'Prisoner'):
-    bio = prisoner.sections['Bio']
-    bio['Served'] = bio['Sentence']
+    for prisoner in parser.find(section='Objects', filter=prisoner_filter):
+        bio = prisoner.sections['Bio']
+        bio['Served'] = bio['Sentence']
 
-parser.save('autosave.prison')
+    # implicit save on exiting the context.
