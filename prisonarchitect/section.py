@@ -43,6 +43,9 @@ class Section(object):
             if ' ' in k:
                 k = '"{}"'.format(k)
 
+            if ' ' in v:
+                v = '"{}"'.format(v)
+
             yield spacing + '{}   {}'.format(k, v)
 
         for section in self.sections.values():

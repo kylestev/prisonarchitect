@@ -41,8 +41,18 @@ class PrisonParser(object):
             elif type(piece) is Token:
                 token = piece
                 if token.type in ['T_NAME', 'T_OBJ_PROP']:
-                    section.add_attribute(token.value, tokens[idx + 1].value)
-                    idx += 2
+                    nxt = tokens[idx + 1]
+
+                    if nxt.type == 'T_QUOTE':
+                        q_tokens, q_consumed = read_quote(tokens[idx+1:])
+                        val = ' '.join(t.value for t in q_tokens)
+                        idx += q_consumed + 1
+                    else:
+                        val = nxt.value
+                        idx += 2
+
+                    section.add_attribute(token.value, val)
+
                     noaction = False
                 elif token.type == 'T_QUOTE':
                     q_tokens, q_consumed = read_quote(tokens[idx:])
