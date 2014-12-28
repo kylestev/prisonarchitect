@@ -105,17 +105,8 @@ class PrisonParser(object):
 
         return self._sections[name]
 
-    def load(self, filename, caching=False):
-        if caching:
-            self.tokens = []
-            with open('cache.json', 'r') as f:
-                token_pairs = json.loads(f.read())
-            for pair in token_pairs:
-                self.tokens.append(Token(*pair))
-        else:
-            self.tokens = self._tokenize(filename)
-            with open('cache.json', 'w') as f:
-                f.write(json.dumps(self.tokens))
+    def load(self, filename):
+        self.tokens = self._tokenize(filename)
 
         section = Section('self')
 
