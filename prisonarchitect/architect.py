@@ -105,6 +105,30 @@ class PrisonParser(object):
 
         return self._sections[name]
 
+    def find(self, section=None, filter=lambda sec: True):
+        if section is None:
+            sections = self._section_indices.keys()
+        elif section in self._section_indices:
+            sections = [section]
+        else:
+            raise IndexError('{} section does not exist'.format(section))
+
+        def _dfs(sect, _criteria):
+            if _criteria(sect):
+                yield sect
+
+            for s in sect.sections.values():
+                if _criteria(s):
+                    # print s
+                    yield s
+
+        for s in sections:
+            for match in _dfs(self.get_section(s), filter):
+                yield match
+
+    def find_first(self, *args, **kwargs):
+        return next(self.find(*args, **kwargs))
+
     def load(self, filename):
         self.tokens = self._tokenize(filename)
 
