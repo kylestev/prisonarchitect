@@ -3,17 +3,9 @@ prisonarchitect
 
 Python module for accessing Prison Architect save files
 
+This is not ready for use due to some issues with reading and saving. See [#1](https://github.com/kylestev/prisonarchitect/issues/1) and [#2](https://github.com/kylestev/prisonarchitect/issues/2) specifically.
+
 ## Example Usage
 
-```python
-from pprint import pprint
+See example files in `./examples`
 
-from prisonarchitect import PrisonParser
-
-parser = PrisonParser()
-base = parser.load('autosave.prison')
-print base['Intake.numPrisoners'], 'new prisoners'
-base['CeoLetterRead'] = 'false'
-parser.save('autosave.prison')
-
-```
