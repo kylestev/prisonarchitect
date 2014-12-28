@@ -27,7 +27,10 @@ class Section(object):
         self.attrs[key] = value
 
     def add_attribute(self, name, value):
-        self.attrs[name] = value
+        if name not in self.attrs:
+            self.attrs[name] = []
+
+        self.attrs[name].append(value)
 
     def add_section(self, section):
         self.sections[section.name] = section
@@ -39,14 +42,20 @@ class Section(object):
 
         spacing = (' ' * 4) if not first else ''
 
+        def _format_attr_pair(key, value):
+            if ' ' in key:
+                key = '"{}"'.format(key)
+
+            if ' ' in value:
+                value = '"{}"'.format(value)
+
+            return spacing + '{}   {}'.format(key, value)
+
         for k, v in self.attrs.items():
-            if ' ' in k:
-                k = '"{}"'.format(k)
+            for val in v:
+                yield _format_attr_pair(k, val)
 
-            if ' ' in v:
-                v = '"{}"'.format(v)
 
-            yield spacing + '{}   {}'.format(k, v)
 
         for section in self.sections.values():
             for line in section.generate_save_file_lines():
