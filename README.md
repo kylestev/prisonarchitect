@@ -3,7 +3,7 @@ prisonarchitect
 
 Python module for accessing Prison Architect save files
 
-This is not production ready. Please checkout the [Trello Board](https://trello.com/b/6RdWnlJ0/prison-architect) to see current development plans before contributing new features.
+This is no where near production ready, unfortunately. Major speed optimizations are to be determined. Aiming to reach a stable release before Prison Architect exits their Alpha phase.
 
 ## Example Usage
 
